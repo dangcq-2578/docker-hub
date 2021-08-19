@@ -7,9 +7,9 @@ jobs:
   stage: build
   use: PHP Test
   with:
-    beforeText: Hello World (before script)
+    beforeText: Hello World before
     scriptText: $HOST_IP
-    afterText: Hello World (after script)
+    afterText: Hello World after
     except:
       events:
       - push
