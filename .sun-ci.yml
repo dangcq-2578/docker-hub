@@ -1,10 +1,41 @@
 stages:
+  - build
   - test
 
 jobs:
+- name: RecipeTest
+  stage: build
+  use: PHP Test
+  with:
+    beforeText: Hello World (before script)
+    scriptText: $HOST_IP
+    afterText: Hello World (after script)
+    except:
+      events:
+      - push
+      - tag
 
-- name: test:node
-  stage: test
-  image: node:12-alpine
+- name: VariableTest
+  stage: build
+  image: alpine:3.14
+  before_script:
+    - echo $A
+    - echo $B
+    - echo $C
   script:
-  - yarn
+    - echo Hello
+
+- name: Say bye!
+  stage: test
+  image: alpine
+  workspace: none
+  script:
+  - sleep $TIME
+  - echo Byeee!
+
+- name: Say bye again!
+  stage: test
+  image: alpine
+  script:
+  - sleep 10
+  - echo Byeee!
