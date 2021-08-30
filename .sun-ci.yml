@@ -1,40 +1,42 @@
+default:
+  workspace: shared
+  
+.skip-deploy: &skip-deploy
+  messages:
+  - '[ci skip deploy]'
+
+
 stages:
-  - build
-  - test
+- Install
+- Build
+- Test
 
 jobs:
-- name: RecipeTest
-  stage: build
-  use: PHP Test
-  with:
-    beforeText: Hello World before
-    scriptText: $HOST_IP
-    afterText: Hello World after
-    except:
-      events:
-      - push
-      - tag
-
-- name: VariableTest
-  stage: build
-  image: alpine:3.14
-  before_script:
-    - echo $A
-    - echo $B
-    - echo $C
+- name: Yarn Install
+  image: node:12-alpine
+  stage: Install
   script:
-    - echo Hello
+  - echo "yarn install"
+
+- name: Sleep
+  stage: Build
+  image: alpine
+  script:
+  - sleep 10
+  - echo $CI_COMMIT_MESSAGE
+  except:
+    <<: *skip-deploy
 
 - name: Say bye!
-  stage: test
+  stage: Test
   image: alpine
   workspace: none
   script:
-  - sleep $TIME
+  - sleep 10
   - echo Byeee!
 
 - name: Say bye again!
-  stage: test
+  stage: Test
   image: alpine
   script:
   - sleep 10
